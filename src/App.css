@@ -1,0 +1,115 @@
+/* Navigation bar */
+.navbar {
+  display: flex;
+  gap: 20px;
+  padding: 16px 20px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+}
+
+/* Menu mục đang xem (bắt buộc theo đề) */
+.active {
+  color: red !important;
+  font-weight: bold !important;
+}
+
+/* Layout container */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+  font-family: Arial, sans-serif;
+}
+
+/* Bảng danh bạ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f7f7f7;
+}
+
+/* Rê chuột lên một dòng thì đổi màu nền (bắt buộc theo đề) */
+tbody tr:hover {
+  background-color: #e8f4fd;
+}
+
+/* Liên hệ yêu thích có nền vàng nhạt (bắt buộc theo đề) */
+tr.favorite-row {
+  background-color: #fff9c4;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.detail-item {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filter-bar label {
+  font-weight: bold;
+  margin-right: 8px;
+}
