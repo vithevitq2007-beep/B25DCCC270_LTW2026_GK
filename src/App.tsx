@@ -16,7 +16,22 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Tải dữ liệu: Đọc từ localStorage nếu có, nếu chưa có thì gọi API
   useEffect(() => {
+    const savedContacts = localStorage.getItem('gk_contacts');
+    if (savedContacts) {
+      try {
+        const parsed = JSON.parse(savedContacts);
+        if (Array.isArray(parsed)) {
+          setContacts(parsed);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        // Parse error, fallback sang gọi API
+      }
+    }
+
     const controller = new AbortController();
 
     axios
@@ -37,6 +52,13 @@ const App: React.FC = () => {
       controller.abort();
     };
   }, []);
+
+  // Lưu dữ liệu vào localStorage khi có thay đổi (chỉ lưu sau khi tải xong)
+  useEffect(() => {
+    if (!loading) {
+      localStorage.setItem('gk_contacts', JSON.stringify(contacts));
+    }
+  }, [contacts, loading]);
 
   const handleAddContact = (newContact: Contact) => {
     setContacts((prev) => [...prev, newContact]);

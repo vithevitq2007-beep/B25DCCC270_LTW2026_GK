@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Contact } from '../types';
 
@@ -9,6 +9,38 @@ interface ContactDetailProps {
 const ContactDetail: React.FC<ContactDetailProps> = ({ contacts }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  // State phục vụ mô phỏng cuộc gọi (Mục 0 & 2.5)
+  const [isCalling, setIsCalling] = useState<boolean>(false);
+  const [seconds, setSeconds] = useState<number>(0);
+  const [callEndedMsg, setCallEndedMsg] = useState<string | null>(null);
+
+  // Bộ đếm thời gian khi đang gọi, dừng hẳn khi rời khỏi trang
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+    if (isCalling) {
+      timer = setInterval(() => {
+        setSeconds((s) => s + 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [isCalling]);
+
+  const handleStartCall = () => {
+    setSeconds(0);
+    setIsCalling(true);
+    setCallEndedMsg(null);
+  };
+
+  const handleEndCall = () => {
+    setIsCalling(false);
+    setCallEndedMsg(`Cuộc gọi kết thúc sau ${seconds} giây`);
+  };
 
   const numericId = Number(id);
   const contact = contacts.find((c) => c.id === numericId);
@@ -45,7 +77,29 @@ const ContactDetail: React.FC<ContactDetailProps> = ({ contacts }) => {
         <strong>Yêu thích:</strong> {favorite ? 'Có' : 'Không'}
       </div>
 
-      <div style={{ marginTop: '20px' }}>
+      {/* Khu vực mô phỏng gọi điện */}
+      <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+        {!isCalling ? (
+          <button type="button" onClick={handleStartCall}>
+            Gọi
+          </button>
+        ) : (
+          <div>
+            <p>Đang gọi... {seconds} giây</p>
+            <button type="button" onClick={handleEndCall}>
+              Kết thúc
+            </button>
+          </div>
+        )}
+
+        {callEndedMsg && !isCalling && (
+          <div style={{ marginTop: '10px', color: '#2e7d32', fontWeight: 'bold' }}>
+            {callEndedMsg}
+          </div>
+        )}
+      </div>
+
+      <div>
         <button type="button" onClick={() => navigate(-1)}>
           Quay lại
         </button>

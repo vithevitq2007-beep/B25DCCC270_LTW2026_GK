@@ -20,21 +20,43 @@ const AddContact: React.FC<AddContactProps> = ({ contacts, onAddContact }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name.trim() || !phone.trim() || !email.trim() || !group.trim()) {
+    const trimmedName = name.trim();
+    const trimmedPhone = phone.trim();
+    const trimmedEmail = email.trim();
+    const trimmedGroup = group.trim();
+
+    // 1. Kiểm tra ô trống (Mục 4)
+    if (!trimmedName || !trimmedPhone || !trimmedEmail || !trimmedGroup) {
       setErrorMessage('Vui lòng nhập đầy đủ thông tin');
       return;
     }
 
-    const maxId = contacts.length > 0
-      ? Math.max(...contacts.map((c) => Number(c.id)))
-      : 0;
+    // 2. Kiểm tra số điện thoại (Mục 8.1)
+    const phoneRegex = /^0\d{9}$/;
+    if (!phoneRegex.test(trimmedPhone)) {
+      setErrorMessage(
+        'Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0'
+      );
+      return;
+    }
+
+    // 3. Kiểm tra email (Mục 8.2)
+    if (!trimmedEmail.includes('@')) {
+      setErrorMessage('Email không hợp lệ');
+      return;
+    }
+
+    const maxId =
+      contacts.length > 0
+        ? Math.max(...contacts.map((c) => Number(c.id)))
+        : 0;
 
     const newContact: Contact = {
       id: Number(maxId + 1),
-      name: name.trim(),
-      phone: phone.trim(),
-      email: email.trim(),
-      group: group.trim(),
+      name: trimmedName,
+      phone: trimmedPhone,
+      email: trimmedEmail,
+      group: trimmedGroup,
       favorite: false
     };
 

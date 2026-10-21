@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Contact } from '../types';
 import ContactTable from '../components/ContactTable';
 import FilterBar from '../components/FilterBar';
@@ -14,16 +14,46 @@ const ContactList: React.FC<ContactListProps> = ({
   onDelete,
   onToggleFavorite
 }) => {
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedGroup, setSelectedGroup] = useState<string>('Tất cả');
+
+  // Hàm bắt buộc theo yêu cầu kỹ thuật của đề
   const handleQueryShift = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Hàm xử lý tìm kiếm (phần nâng cao mục 6)
+    setSearchQuery(e.target.value);
   };
+
+  const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedGroup(e.target.value);
+  };
+
+  // Lọc theo cả ô tìm kiếm (tên hoặc số điện thoại) và nhóm
+  const query = searchQuery.trim().toLowerCase();
+  const filteredContacts = contacts.filter((contact) => {
+    const matchesSearch =
+      query === '' ||
+      contact.name.toLowerCase().includes(query) ||
+      contact.phone.toLowerCase().includes(query);
+
+    const matchesGroup =
+      selectedGroup === 'Tất cả' || contact.group === selectedGroup;
+
+    return matchesSearch && matchesGroup;
+  });
 
   return (
     <div>
       <h2>Danh sách liên hệ</h2>
-      <FilterBar handleQueryShift={handleQueryShift} />
+      <FilterBar
+        searchQuery={searchQuery}
+        handleQueryShift={handleQueryShift}
+        selectedGroup={selectedGroup}
+        onGroupChange={handleGroupChange}
+      />
+      <div>
+        <p>Tìm thấy {filteredContacts.length} liên hệ</p>
+      </div>
       <ContactTable
-        contacts={contacts}
+        contacts={filteredContacts}
         onDelete={onDelete}
         onToggleFavorite={onToggleFavorite}
       />
